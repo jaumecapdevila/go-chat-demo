@@ -26,5 +26,6 @@ func (h *authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // MustAuth returns a new authHandler object
 func MustAuth(handler http.Handler) http.Handler {
+	// Wrap authHandler around the received handler
 	return &authHandler{next: handler}
 }
