@@ -1,12 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"sync"
 	"text/template"
@@ -22,16 +19,6 @@ type templateHandler struct {
 	templ    *template.Template
 }
 
-type oauthConfig struct {
-	oauth struct {
-		github struct {
-			key      string
-			secret   string
-			callback string
-		}
-	}
-}
-
 // ServeHTTP handles the HTTP request
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
@@ -41,20 +28,13 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	file, _ := os.Open(filepath.Join("config", "config.json"))
-	decoder := json.NewDecoder(file)
-	config := oauthConfig{}
-	err := decoder.Decode(&config)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
+	config := LoadConfig()
 	gomniauth.SetSecurityKey(signature.RandomKey(64))
 	gomniauth.WithProviders(
 		github.New(
-			config.oauth.github.key,
-			config.oauth.github.secret,
-			config.oauth.github.callback,
+			config.Oauth.Github.Key,
+			config.Oauth.Github.Secret,
+			config.Oauth.Github.Callback,
 		),
 	)
 }

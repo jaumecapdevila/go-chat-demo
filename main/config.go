@@ -7,14 +7,17 @@ import (
 	"path/filepath"
 )
 
+// OauthConfig object
 type OauthConfig struct {
 	Oauth Oauth
 }
 
+// Oauth object
 type Oauth struct {
 	Github Github
 }
 
+// Github object
 type Github struct {
 	Key      string
 	Secret   string
