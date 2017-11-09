@@ -25,8 +25,9 @@ type templateHandler struct {
 type oauthConfig struct {
 	oauth struct {
 		github struct {
-			key    string
-			secret string
+			key      string
+			secret   string
+			callback string
 		}
 	}
 }
@@ -53,7 +54,7 @@ func init() {
 		github.New(
 			config.oauth.github.key,
 			config.oauth.github.secret,
-			"http://localhost:8080/auth/callback/github",
+			config.oauth.github.callback,
 		),
 	)
 }
