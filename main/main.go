@@ -30,6 +30,8 @@ func main() {
 	//r.tracer = trace.New(os.Stdout)
 	http.Handle("/", MustAuth(&templateHandler{filename: "chat.html"}))
 	http.Handle("/login", &templateHandler{filename: "login.html"})
+	// we dont need an object because this function doesn't need to store any state
+	http.HandleFunc("/auth/", loginHandler)
 	http.Handle("/room", r)
 
 	// Run the chat in other goroutine
