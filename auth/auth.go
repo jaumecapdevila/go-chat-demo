@@ -1,4 +1,4 @@
-package main
+package auth
 
 import (
 	"fmt"
@@ -30,15 +30,15 @@ func (h *authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // MustAuth returns a new authHandler object
-func MustAuth(handler http.Handler) http.Handler {
+func Must(handler http.Handler) http.Handler {
 	// Wrap authHandler around the received handler
 	return &authHandler{next: handler}
 }
 
-// loginHandler handles the third-party login process.
+// LoginHandler handles the third-party login process.
 // format: /auth/{action}/{provider}
 // hardcoded github provider
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	segs := strings.Split(r.URL.Path, "/")
 	action := segs[2]
 	switch action {

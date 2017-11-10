@@ -14,7 +14,10 @@
 .glide/
 
 # Config folder
-/main/config/
+config.json
 
 # Generated binary
-/main/chat
+chat
+
+# Mac 
+.DS_Store

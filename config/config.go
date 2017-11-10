@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"encoding/json"
@@ -24,8 +24,8 @@ type Github struct {
 	Callback string
 }
 
-// LoadConfig returns the configuration of the application
-func LoadConfig() OauthConfig {
+// Load returns the configuration of the application
+func Load() OauthConfig {
 	file, osErr := os.Open(filepath.Join("config", "config.json"))
 	defer file.Close()
 	if osErr != nil {

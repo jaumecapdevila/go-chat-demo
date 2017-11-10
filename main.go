@@ -8,6 +8,9 @@ import (
 	"sync"
 	"text/template"
 
+	"github.com/jaumecapdevila/chat/auth"
+	"github.com/jaumecapdevila/chat/config"
+
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/github"
 	"github.com/stretchr/signature"
@@ -28,7 +31,7 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	config := LoadConfig()
+	config := config.Load()
 	gomniauth.SetSecurityKey(signature.RandomKey(64))
 	gomniauth.WithProviders(
 		github.New(
@@ -44,10 +47,10 @@ func main() {
 	flag.Parse()
 	r := newRoom()
 	//r.tracer = trace.New(os.Stdout)
-	http.Handle("/", MustAuth(&templateHandler{filename: "chat.html"}))
+	http.Handle("/", auth.Must(&templateHandler{filename: "chat.html"}))
 	http.Handle("/login", &templateHandler{filename: "login.html"})
 	// we dont need an object because this function doesn't need to store any state
-	http.HandleFunc("/auth/", loginHandler)
+	http.HandleFunc("/auth/", auth.LoginHandler)
 	http.Handle("/room", r)
 
 	// Run the chat in other goroutine
