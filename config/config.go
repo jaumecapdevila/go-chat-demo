@@ -9,7 +9,8 @@ import (
 
 // OauthConfig object
 type OauthConfig struct {
-	Oauth Oauth
+	Oauth  Oauth
+	Logger Logger
 }
 
 // Oauth object
@@ -22,6 +23,11 @@ type Github struct {
 	Key      string
 	Secret   string
 	Callback string
+}
+
+// Logger object
+type Logger struct {
+	Dir string
 }
 
 // Load returns the configuration of the application

@@ -18,6 +18,7 @@ config.json
 
 # Generated binary
 chat
-
+# logs
+/var/logs/
 # Mac 
 .DS_Store

@@ -2,18 +2,14 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"sync"
 	"text/template"
 
 	"github.com/jaumecapdevila/chat/auth"
-	"github.com/jaumecapdevila/chat/config"
-
-	"github.com/stretchr/gomniauth"
-	"github.com/stretchr/gomniauth/providers/github"
-	"github.com/stretchr/signature"
+	"github.com/jaumecapdevila/chat/trace"
 )
 
 type templateHandler struct {
@@ -30,19 +26,9 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.templ.Execute(w, r)
 }
 
-func init() {
-	config := config.Load()
-	gomniauth.SetSecurityKey(signature.RandomKey(64))
-	gomniauth.WithProviders(
-		github.New(
-			config.Oauth.Github.Key,
-			config.Oauth.Github.Secret,
-			config.Oauth.Github.Callback,
-		),
-	)
-}
-
 func main() {
+	tracer := trace.Log()
+	tracer.Trace("Working")
 	var port = flag.String("port", ":8080", "The port of the application.")
 	flag.Parse()
 	r := newRoom()
@@ -56,9 +42,9 @@ func main() {
 	// Run the chat in other goroutine
 	// in order to let the main goroutine to run the webserver
 	go r.run()
-	log.Println("Starting web server on", *port)
 	// Start the web server
 	if err := http.ListenAndServe(*port, nil); err != nil {
-		log.Fatal("ListenAndServe:", err)
+		tracer.Trace("ListenAndServe:", err)
+		os.Exit(1)
 	}
 }

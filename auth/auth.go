@@ -5,8 +5,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/jaumecapdevila/chat/config"
 	"github.com/stretchr/gomniauth"
+	"github.com/stretchr/gomniauth/providers/github"
 	"github.com/stretchr/objx"
+	"github.com/stretchr/signature"
 )
 
 type authHandler struct {
@@ -103,4 +106,16 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintf(w, "Auth action %s not supported", action)
 	}
+}
+
+func init() {
+	config := config.Load()
+	gomniauth.SetSecurityKey(signature.RandomKey(64))
+	gomniauth.WithProviders(
+		github.New(
+			config.Oauth.Github.Key,
+			config.Oauth.Github.Secret,
+			config.Oauth.Github.Callback,
+		),
+	)
 }
