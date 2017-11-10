@@ -28,7 +28,6 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	tracer := trace.Log()
-	tracer.Trace("Working")
 	var port = flag.String("port", ":8080", "The port of the application.")
 	flag.Parse()
 	r := newRoom()
